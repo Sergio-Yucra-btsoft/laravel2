@@ -33,7 +33,13 @@ class ProjectController extends Controller
             'url' => request('url'),
             'description' => request('description'),
         ]);*/
-        Project::create(request()->all()); //usar solo si los datos de la bd son iguales  a los del formulario
+        $fields = request()->validate([
+            'title' => 'required',
+            'url' =>'required',
+            'description' =>'required',
+        ]);
+        Project::create($fields); //la manera mas obtima de protejerse de asignacion masiva //nose necesita en le protected en el model
+
         return redirect()->route('projects.index');
     }
 
