@@ -1,5 +1,7 @@
 @extends('layout')
 
 @section('content')
-    Portafolio
+{{$project->title}}
+<br>
+{{$project->description}}
 @endsection
