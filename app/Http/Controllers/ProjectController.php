@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SaveProjectRequest;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
@@ -26,21 +27,23 @@ class ProjectController extends Controller
         return view('projects.create');
     }
 
-    public function store()
+    public function store(SaveProjectRequest $request)
     {
-        /*Project::create([
-            'title' => request('title'),
-            'url' => request('url'),
-            'description' => request('description'),
-        ]);*/
-        $fields = request()->validate([
-            'title' => 'required',
-            'url' =>'required',
-            'description' =>'required',
-        ]);
-        Project::create($fields); //la manera mas obtima de protejerse de asignacion masiva //nose necesita en le protected en el model
+        Project::create($request->validated()); //la manera mas obtima de protejerse de asignacion masiva //nose necesita en le protected en el model
 
         return redirect()->route('projects.index');
     }
+
+    public function edit(Project $project)
+    {
+        return view('projects.edit', compact('project'));
+    }
+
+    public function update(SaveProjectRequest $request, Project $project)
+    {
+        $project->update($request->validated());
+        return redirect()->route('projects.index');
+    }
+
 
 }
