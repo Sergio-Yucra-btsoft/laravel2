@@ -24,7 +24,9 @@ class ProjectController extends Controller
 
     public function create()
     {
-        return view('projects.create');
+        return view('projects.create',[
+            'project' => new Project() //se puede usar el constructor del modelo para inicializar el objeto
+        ]);
     }
 
     public function store(SaveProjectRequest $request)
