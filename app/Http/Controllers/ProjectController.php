@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SaveProjectRequest;
 use App\Models\Project;
+use GuzzleHttp\Psr7\Message;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class ProjectController extends Controller
 {
@@ -12,8 +14,11 @@ class ProjectController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $projects = Project::get();
+    { 
+        $key = "propject.page" . request('page',1);    
+        $projects = Cache::remember($key, 60, function () {
+            return Project::paginate(10);
+        });
         return view('projects.index', compact('projects'));
     }
 
@@ -45,6 +50,12 @@ class ProjectController extends Controller
     {
         $project->update($request->validated());
         return redirect()->route('projects.index');
+    }
+
+    public function destroy(Project $project)
+    {
+        $project->delete();
+        return redirect()->route('projects.index')->with('success', 'Se elimino el proyecto');  //mensaje de confirmacion de eliminacion;
     }
 
 
